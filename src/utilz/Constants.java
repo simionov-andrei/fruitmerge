@@ -12,9 +12,9 @@ public class Constants {
                 case ORANGE_IDLE:
                 case LEMON_IDLE:
                 case WATERMELON_IDLE:
-                    return 2;
+                    return 17;
                 default:
-                    return 2;
+                    return 17;
             }
         }
     }

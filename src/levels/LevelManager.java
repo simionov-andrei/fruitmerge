@@ -20,16 +20,12 @@ public class LevelManager {
 
     private void importOutsideSprites() {
         BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS);
-        int tileWidth = 16;
-        int tileHeight = 16;
-        int numTilesX = img.getWidth() / tileWidth;
-        int numTilesY = img.getHeight() / tileHeight;
 
-        levelSprite = new BufferedImage[242];
-        for(int i = 0; i < numTilesY; i++) {
-            for(int j = 0; j < numTilesX; j++) {
-                int index = i*numTilesX + j;
-                levelSprite[index] = img.getSubimage(j*tileWidth, i*tileHeight, tileWidth, tileHeight);
+        levelSprite = new BufferedImage[48];
+        for(int i = 0; i < 4; i++) {
+            for(int j = 0; j < 12; j++) {
+                int index = i*12 + j;
+                levelSprite[index] = img.getSubimage(j*32, i*32, 32, 32);
             }
         }
     }
@@ -45,6 +41,10 @@ public class LevelManager {
 
     public void update() {
 
+    }
+
+    public Level getCurrentLevel() {
+        return levelOne;
     }
     
 }
