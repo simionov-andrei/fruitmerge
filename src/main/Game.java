@@ -3,6 +3,7 @@ package main;
 import java.awt.Graphics;
 import entities.Player;
 import levels.LevelManager;
+import levels.Playing;
 
 public class Game implements Runnable {
 
@@ -13,6 +14,8 @@ public class Game implements Runnable {
     private final int UPS_SET = 200;
     private Player player;
     private LevelManager levelManager;
+
+    private Playing playing;
 
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 1.5f;
@@ -34,6 +37,7 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
+        playing = new Playing(this);
         levelManager = new LevelManager(this);
         player = new Player(200, 200, (int) (32 * SCALE), (int) (32 * SCALE));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
@@ -50,6 +54,7 @@ public class Game implements Runnable {
     }
 
     public void render(Graphics g) {
+        playing.draw(g);
         levelManager.draw(g);
         player.render(g);
     }
