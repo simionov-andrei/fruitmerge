@@ -12,18 +12,8 @@ public class GamePanel extends JPanel{
     
     private MouseInputs mouseInputs = new MouseInputs(this);
     private KeyboardInputs keyboardInputs = new KeyboardInputs(this);
-    private float xDelta = 100;
-    private float yDelta = 100;
     private Game game;
-
-    //private long lastAniStartTime = 0;
-    //private long aniDelay = 1000; // 2 seconds in miliseconds
     
-    /* 
-    private float xDir = 1f;
-    private float yDir = 1f;
-    private Random random = new Random();
-    */
     public GamePanel(Game game) {
         this.game = game;
 
@@ -41,7 +31,7 @@ public class GamePanel extends JPanel{
     }
 
     public void changeXDelta(int value) {
-        this.xDelta += value;
+        //this.xDelta += value;
         /* 
         if (100 <= this.xDelta && this.xDelta <= 300) {
             repaint();
@@ -52,15 +42,6 @@ public class GamePanel extends JPanel{
         }
         */
     }
-
-    public void changeYDelta(int value) {
-        this.yDelta += value;
-    }
-
-    public void setRecPosition(int x, int y) {
-        this.xDelta = x;
-        this.yDelta = y;
-    }
        
     public void updateGame() {
     }
@@ -70,7 +51,7 @@ public class GamePanel extends JPanel{
         game.render(g);       
         //repaint(); - not needed anymore because of run from "Game"
     }
-    /*
+    /* 
     public void updateRect() {
         xDelta += xDir;
         if (xDelta > 400 || xDelta < 0) {
