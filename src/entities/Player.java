@@ -1,7 +1,7 @@
 package entities;
 
 import java.awt.Graphics;
-import java.awt.geom.Rectangle2D.Float;
+//import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 import main.Game;
 import static utilz.Constants.PlayerConstants.*;
@@ -24,66 +24,68 @@ public class Player extends Entity {
     //jumping / gravity
     private float airSpeed = 0f;
     private float gravity = 0.1f * Game.SCALE;
-    private float jumpSpeed = -5.25f * Game.SCALE;
-    private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+    private float fallSpeedAfterCollision = 0.0f * Game.SCALE;
     private boolean inAir = false;
+    protected boolean freeMove = true;
 
-    public Player(float x, float y, int width, int height) {
+    //private Bush bush;
+
+    public Player(float x, float y, int width, int height/* , Bush bush*/) {
         super(x, y, width, height);
+        //this.bush = bush;
         loadAnimations();
         initHitbox(x, y, 14 * Game.SCALE, 14 * Game.SCALE);
     }
 
     public void update() {
+        //bush.updatePos();
         updatePos();
         updateAnimationTick();
     }
 
     public void render(Graphics g) {
+        //bush.render(g);
         g.drawImage(animations[aniIndex], (int) (hitbox.x - xDriveOffset), (int) (hitbox.y - yDriveOffset), (int)(width*Game.SCALE), (int)(height*Game.SCALE), null);
         drawHitbox(g);
     }
 
-    private void updateAnimationTick() {
-        //long currentTime = System.currentTimeMillis();
-        //if (currentTime - lastAniStartTime >= aniDelay) {
-            aniTick++;
-            if (aniTick >= aniSpeed) {
-                aniTick = 0;
-                aniIndex++;
-                if (aniIndex >= GetSpriteAmount(playerAction)) {
-                    aniIndex = 0;
-                }
+    public void updateAnimationTick() {
+        aniTick++;
+        if (aniTick >= aniSpeed) {
+            aniTick = 0;
+            aniIndex++;
+            if (aniIndex >= GetSpriteAmount(playerAction)) {
+                aniIndex = 0;
             }
-            //lastAniStartTime = currentTime;
-            //}
         }
+    }
         
-     public void updatePos() {
+    public void updatePos() {
+        //make 2 classes for bush and for orange  --- DONE :D
+        //make so bush remains on its initial position and can move with a/d --- DONE :D
+        //make so orange drops, you cant use a/d anymore --- DONE :D
+        //make so orange moves with the bush when on top --- DONE :D
+        //make so orange respawns
+        //make merging mechanic
+
 
         if (jump) {
-            jump();
-        }
-        
-        if (!left && !right && !inAir) {
-            return;
-        }
-
-        float xSpeed = 0;
-
-        if (left) {
-            xSpeed = -playerSpeed;
-        }
-        if (right) {
-            xSpeed = playerSpeed;
+            drop();
         }
 
         if (!inAir) {
+            return;
+        }
+        
+        float xSpeed = 0;
+        
+        if (!inAir) {
             if (!IsEntityOnFloor(hitbox, lvlData)) {
                 inAir = true;
+                freeMove = false;
             }
         }
-
+        
         if (inAir) {
             if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
                 hitbox.y += airSpeed;
@@ -102,31 +104,31 @@ public class Player extends Entity {
             updateXPos(xSpeed);
         } 
     }
-
-    private void jump() {
-        if (inAir) {
-            return;
-        }
-        inAir = true;
-        airSpeed = jumpSpeed;
-    }
-
-    private void resetInAir() {
-        inAir = false;
-        airSpeed = 0;
-    }
-
-    private void updateXPos(float xSpeed) {
+    
+    protected void updateXPos(float xSpeed) {
         if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
             hitbox.x += xSpeed;
         } else {
             hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
         }
     }
-    
 
+    protected void drop() {
+        if (inAir) {
+            return;
+        }
+        inAir = true;
+        freeMove = false;
+    }
+
+    protected void resetInAir() {
+        inAir = false;
+        freeMove = false;
+        airSpeed = 0;
+    }
+    
     private void loadAnimations() {
-        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.ORANGE_SPRITE);
         int imageWidth = img.getWidth() / 17;
         int imageHeight = img.getHeight() / 1;
         
@@ -147,51 +149,6 @@ public class Player extends Entity {
         right = false;
         up = false;
         down = false;
-    }
-
-    public boolean isLeft() {
-        return left;
-    }
-
-
-
-    public boolean isUp() {
-        return up;
-    }
-
-
-
-    public boolean isRight() {
-        return right;
-    }
-
-
-
-    public boolean isDown() {
-        return down;
-    }
-
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-
-
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-
-
-
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-
-
-    public void setDown(boolean down) {
-        this.down = down;
     }
 
     public void setJump(boolean jump) {
