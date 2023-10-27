@@ -3,14 +3,11 @@ package levels;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import entities.Player;
 import main.Game;
 import utilz.LoadSave;
 import static utilz.Constants.Environment.*;
 
 public class Playing {
-    private Player player;
-    private LevelManager levelManager;
 
     private BufferedImage backgroundImg,  bigCloud, smallCloud;
     private int[] smallCloudsPos;
@@ -30,7 +27,6 @@ public class Playing {
     //@Override
     public void draw(Graphics g) {
         g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
-
         drawClouds(g);
     }
 

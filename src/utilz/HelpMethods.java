@@ -23,9 +23,9 @@ public class HelpMethods {
      
     public static boolean IsSolid(float x, float y, int[][] lvlData) {
         
-        if(x < 0 || x >= Game.GAME_WIDTH) {
+        if(x < 435 || x > 1000) {
             return true;
-        } 
+        }
         
         if(y < 0 || y >= Game.GAME_HEIGHT) {
             return true;
@@ -35,8 +35,12 @@ public class HelpMethods {
         float yIndex = y / Game.TILES_SIZE;
 
         int value = lvlData[(int) yIndex][(int) xIndex];
-        System.out.println(value);
-        if(value >= 48 || value < 0 || value != 11) {
+
+        //BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
+        //Color color = new Color(img.getRGB((int) xIndex, (int) yIndex));
+        //int greenValue = color.getGreen();
+
+        if(value >= 48 || value < 0 || value != 11 /*|| greenValue == APPLE*/) {
             return true;
         }
         
