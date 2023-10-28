@@ -2,11 +2,9 @@ package entities;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-
 import main.Game;
-
 import static utilz.Constants.PlayerConstants.*;
-import static utilz.HelpMethods.CanMoveHere;
+import static utilz.HelpMethods.*;
 import utilz.LoadSave;
 
 public class Player extends Entity {
@@ -15,12 +13,20 @@ public class Player extends Entity {
     private int aniTick;
     private int aniIndex;
     private int aniSpeed = 23;
-    private int playerAction = ORANGE_IDLE;
-    private boolean left, up, right, down;
+    private int playerAction = FRUIT_IDLE;
+    private boolean left, up, right, down, jump;
     private float playerSpeed = 2.0f;
     private int[][] lvlData;
     private float xDriveOffset = 16.5f * Game.SCALE;
     private float yDriveOffset = 16.5f * Game.SCALE;
+
+    //gravity
+    private float airSpeed = 0f;
+    private float gravity = 0.01f * Game.SCALE;
+    private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+    private boolean inAir = false;
+    protected boolean freeMove = true;
+    SpawningPoint spawningPoint;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -38,57 +44,87 @@ public class Player extends Entity {
         drawHitbox(g);
     }
 
-    private void updateAnimationTick() {
-        //long currentTime = System.currentTimeMillis();
-        //if (currentTime - lastAniStartTime >= aniDelay) {
-            aniTick++;
-            if (aniTick >= aniSpeed) {
-                aniTick = 0;
-                aniIndex++;
-                if (aniIndex >= GetSpriteAmount(playerAction)) {
-                    aniIndex = 0;
-                }
+    public void updateAnimationTick() {
+        aniTick++;
+        if (aniTick >= aniSpeed) {
+            aniTick = 0;
+            aniIndex++;
+            if (aniIndex >= GetSpriteAmount(playerAction)) {
+                aniIndex = 0;
             }
-            //lastAniStartTime = currentTime;
-            //}
         }
+    }
         
-     public void updatePos() {
+    public void updatePos() {
+        //make 2 classes for bush and for orange  --- DONE :D
+        //make so bush remains on its initial position and can move with a/d --- DONE :D
+        //make so orange drops, you cant use a/d anymore --- DONE :D
+        //make so orange moves with the bush when on top --- DONE :D
+        //make so orange respawns
+        //make merging mechanic
 
-        if (!left && !right && !up && !down) {
+
+        if (jump) {
+            drop();
+            GameManager.getInstance().playerDropped();
+        }
+
+        if (!inAir) {
             return;
         }
-
-        float xSpeed = 0, ySpeed = 0;
-
-        if (left && !right){
-            xSpeed = -playerSpeed;
-        }else if (right && !left){
-            xSpeed = playerSpeed;
+        
+        float xSpeed = 0;
+        
+        if (!inAir) {
+            if (!IsEntityOnFloor(hitbox, lvlData)) {
+                inAir = true;
+                freeMove = false;
+            }
         }
-
-        if (up && !down){
-            ySpeed = -playerSpeed;
-        }else if (down && !up){
-            ySpeed = playerSpeed;
-        }
-        /* 
-        if(CanMoveHere(x + xSpeed, y + ySpeed, 64, lvlData)) {
-            this.x += xSpeed;
-            this.y += ySpeed;
-        }
-        */
-
-        boolean canMove = CanMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, lvlData);
-        System.out.println("Can move: " + canMove);
-        if (canMove) {
+        
+        if (inAir) {
+            if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+                hitbox.y += airSpeed;
+                airSpeed += gravity;
+                updateXPos(xSpeed);
+            } else {
+                hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+                if (airSpeed > 0) {
+                    resetInAir();
+                } else {
+                    airSpeed = fallSpeedAfterCollision;
+                }
+                updateXPos(xSpeed);
+            }
+        } else {
+            updateXPos(xSpeed);
+        } 
+    }
+    
+    protected void updateXPos(float xSpeed) {
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
             hitbox.x += xSpeed;
-            hitbox.y += ySpeed;
+        } else {
+            hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
         }
+    }
+
+    protected void drop() {
+        if (inAir) {
+            return;
+        }
+        inAir = true;
+        freeMove = false;
+    }
+
+    protected void resetInAir() {
+        inAir = false;
+        freeMove = false;
+        airSpeed = 0;
     }
     
     private void loadAnimations() {
-        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.ORANGE_SPRITE);
         int imageWidth = img.getWidth() / 17;
         int imageHeight = img.getHeight() / 1;
         
@@ -97,6 +133,12 @@ public class Player extends Entity {
         for (int i = 0; i < animations.length; i++) {
                 animations[i] = img.getSubimage(i*imageWidth, 0, imageWidth, imageHeight);
         }
+    }
+
+    protected void resetPosition(SpawningPoint spawningPoint) {
+        this.x = spawningPoint.getX();
+        this.y = spawningPoint.getY();
+        System.out.println(x + ";" + y);
     }
 
     public void loadLvlData(int[][] lvlData) {
@@ -111,51 +153,8 @@ public class Player extends Entity {
         down = false;
     }
 
-    public boolean isLeft() {
-        return left;
+    public void setJump(boolean jump) {
+        this.jump = jump;
     }
-
-
-
-    public boolean isUp() {
-        return up;
-    }
-
-
-
-    public boolean isRight() {
-        return right;
-    }
-
-
-
-    public boolean isDown() {
-        return down;
-    }
-
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-
-
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-
-
-
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-
-
 
 }
