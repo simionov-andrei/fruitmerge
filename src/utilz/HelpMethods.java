@@ -1,7 +1,10 @@
 package utilz;
 
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
-
+import java.awt.image.BufferedImage;
+import utilz.Constants.*;
+import utilz.LoadSave.*;
 import main.Game;
 
 public class HelpMethods {
@@ -23,7 +26,7 @@ public class HelpMethods {
      
     public static boolean IsSolid(float x, float y, int[][] lvlData) {
         
-        if(x < 435 || x > 1000) {
+        if(x < 432 || x > 863) {
             return true;
         }
         

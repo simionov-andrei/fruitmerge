@@ -54,6 +54,24 @@ public class LoadSave {
         return list;
     }
     */
+
+    public static int[][] GetPlayerData() {
+        BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
+        int[][] playerData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
+
+        for(int j = 0; j < img.getHeight(); j++) {
+            for(int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int playerValue = color.getGreen();
+                if (playerValue != 49 || playerValue != 50)
+                    playerValue = 49;
+
+                playerData[j][i] = playerValue;
+            }
+        }
+        return playerData;
+    }
+
     public static int[][] GetLevelData() {
         BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
         int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
@@ -61,11 +79,11 @@ public class LoadSave {
         for(int j = 0; j < img.getHeight(); j++) {
             for(int i = 0; i < img.getWidth(); i++) {
                 Color color = new Color(img.getRGB(i, j));
-                int value = color.getRed();
-                if (value >= 48)
-                    value = 0;
+                int levelValue = color.getRed();
+                if (levelValue >= 48)
+                    levelValue = 0;
 
-                lvlData[j][i] = value;
+                lvlData[j][i] = levelValue;
             }
         }
         return lvlData;

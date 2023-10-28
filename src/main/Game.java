@@ -2,13 +2,14 @@ package main;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-
+import java.util.ArrayList;
+import java.util.List;
 import entities.Bush;
 import entities.Player;
-import entities.SpawningPoint;
 import levels.LevelManager;
 import levels.Playing;
 import utilz.LoadSave;
+import utilz.HelpMethods;
 
 public class Game implements Runnable {
 
@@ -22,6 +23,7 @@ public class Game implements Runnable {
     private Playing playing;
     private Bush bush;
     private BufferedImage bushImage = LoadSave.GetSpriteAtlas(LoadSave.BUSH_SPRITE);
+    private List<Player> activePlayers = new ArrayList<>();
 
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 1.5f;
@@ -47,10 +49,36 @@ public class Game implements Runnable {
         levelManager = new LevelManager(this);
         player = new Player(435, 80, (int) (32 * SCALE), (int) (32 * SCALE));
         bush = new Bush(435, 80, (int)(32 * SCALE * 1.5), (int)(32 * SCALE * 1.5), bushImage, player);
-        //bush.setSpawningPoint(new SpawningPoint(, ));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
         bush.loadLvlData(levelManager.getCurrentLevel().getLevelData());
     }
+
+    private void spawnNewPlayer() {
+        if (HelpMethods.IsEntityOnFloor(player.getHitbox(), LoadSave.GetLevelData())) {
+            activePlayers.add(player);
+            player = new Player(bush.getSpawningPointX(), bush.getSpawningPointY(), (int) (32 * SCALE), (int) (32 * SCALE));
+            player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+        }
+    }
+
+    //From the try that worked
+    // public boolean checkCollisions() {
+    //     boolean collision = false;
+        
+    //     // Check collisions with the active player
+    //     if (player.collidesWithSomething()) {
+    //         collision = true;
+    //     }
+    
+    //     // Check collisions with the previous player objects
+    //     for (Player oldPlayer : previousPlayers) {
+    //         if (oldPlayer.collidesWithSomething()) {
+    //             collision = true;
+    //         }
+    //     }
+    
+    //     return collision;
+    // }
 
     private void startGameLoop() {
         gameThread = new Thread(this);
@@ -60,12 +88,20 @@ public class Game implements Runnable {
     public void update() {
         bush.update();
         levelManager.update();
+        player.update();
+        for(Player player : activePlayers) {
+            player.update();
+        }
     }
 
     public void render(Graphics g) {
         playing.draw(g);
         levelManager.draw(g);
         bush.render(g);
+        player.render(g);
+        for(Player player : activePlayers) {
+            player.render(g);
+        }
     }
 
     @Override
@@ -89,8 +125,9 @@ public class Game implements Runnable {
             deltaU += (currentTime - previousTime) / timePerUpdate;
             deltaF += (currentTime - previousTime) / timePerFrame;
             previousTime = currentTime;
-
+            
             if (deltaU >= 1) {
+                spawnNewPlayer();
                 update();
                 updates++;
                 deltaU--;

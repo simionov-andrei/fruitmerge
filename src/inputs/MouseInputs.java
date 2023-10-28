@@ -10,7 +10,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     private GamePanel gamePanel;
 
     public MouseInputs(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
+        //this.gamePanel = gamePanel;
     }
 
     @Override
