@@ -43,11 +43,11 @@ public class Constants {
     }
     
     public static class PlayerConstants {
-        public static final int ORANGE_IDLE = 0;
+        public static final int FRUIT_IDLE = 0;
 
         public static int GetSpriteAmount(int player_action) {
             switch(player_action) {
-                case ORANGE_IDLE:
+                case FRUIT_IDLE:
                     return 17;
                 default:
                     return 17;

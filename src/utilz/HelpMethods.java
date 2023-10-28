@@ -84,4 +84,8 @@ public class HelpMethods {
         }
         return true;
     }
+
+    public static void mergeFruits() {
+        
+    }
 }

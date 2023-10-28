@@ -11,14 +11,15 @@ public class Bush {
     private int width, height;
     private BufferedImage bushImage;
     
-    //jumping / gravity
+    //gravity
     private boolean left, up, right, down;
     private float airSpeed = 0f;
     private int[][] lvlData;
     private float playerSpeed = 2.0f;
     private boolean inAir = false;
     private boolean freeMove = true;
-    private Player player;
+    private Player player, newPlayer;
+    private SpawningPoint spawningPoint;
     
     public Bush(float x, float y, int width, int height, BufferedImage bushImage, Player player) {
         this.x = x;
@@ -27,6 +28,10 @@ public class Bush {
         this.height = height;
         this.bushImage = bushImage;
         this.player = player;
+    }
+
+    public void setSpawningPoint(SpawningPoint spawningPoint) {
+        this.spawningPoint = spawningPoint;
     }
     
     public void render(Graphics g) {
@@ -58,14 +63,13 @@ public class Bush {
             xSpeed = playerSpeed;
             updateXPos(xSpeed);
             if(player.freeMove && !inAir) {
-                System.out.println(freeMove);
                 player.hitbox.x = x;
             }
         }
     }
     
     protected void updateXPos(float xSpeed) {
-        if (CanMoveHere(x + xSpeed, y, width, height, lvlData)) {
+        if (CanMoveHere(x + xSpeed, y, player.hitbox.width, height, lvlData)) {
             freeMove = true;
             x += xSpeed;
         }
@@ -75,6 +79,10 @@ public class Bush {
         inAir = false;
         freeMove = true;
         airSpeed = 0;
+    }
+
+    protected void respawnPlayerAtOldLocation() {
+        newPlayer = new Player(spawningPoint.getX(), spawningPoint.getY(), (int) (32 * Game.SCALE), (int) (32 * Game.SCALE));
     }
 
     public void loadLvlData(int[][] lvlData) {

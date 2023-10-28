@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import entities.Bush;
 import entities.Player;
+import entities.SpawningPoint;
 import levels.LevelManager;
 import levels.Playing;
 import utilz.LoadSave;
@@ -44,8 +45,9 @@ public class Game implements Runnable {
     private void initClasses() {
         playing = new Playing(this);
         levelManager = new LevelManager(this);
-        player = new Player(435, 80, (int) (32 * SCALE), (int) (32 * SCALE)/* , bush*/);
+        player = new Player(435, 80, (int) (32 * SCALE), (int) (32 * SCALE));
         bush = new Bush(435, 80, (int)(32 * SCALE * 1.5), (int)(32 * SCALE * 1.5), bushImage, player);
+        //bush.setSpawningPoint(new SpawningPoint(, ));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
         bush.loadLvlData(levelManager.getCurrentLevel().getLevelData());
     }

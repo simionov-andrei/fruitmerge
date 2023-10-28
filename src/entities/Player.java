@@ -1,7 +1,6 @@
 package entities;
 
 import java.awt.Graphics;
-//import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 import main.Game;
 import static utilz.Constants.PlayerConstants.*;
@@ -14,37 +13,33 @@ public class Player extends Entity {
     private int aniTick;
     private int aniIndex;
     private int aniSpeed = 23;
-    private int playerAction = ORANGE_IDLE;
+    private int playerAction = FRUIT_IDLE;
     private boolean left, up, right, down, jump;
     private float playerSpeed = 2.0f;
     private int[][] lvlData;
     private float xDriveOffset = 16.5f * Game.SCALE;
     private float yDriveOffset = 16.5f * Game.SCALE;
 
-    //jumping / gravity
+    //gravity
     private float airSpeed = 0f;
-    private float gravity = 0.1f * Game.SCALE;
+    private float gravity = 0.01f * Game.SCALE;
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
     private boolean inAir = false;
     protected boolean freeMove = true;
+    SpawningPoint spawningPoint;
 
-    //private Bush bush;
-
-    public Player(float x, float y, int width, int height/* , Bush bush*/) {
+    public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
-        //this.bush = bush;
         loadAnimations();
         initHitbox(x, y, 14 * Game.SCALE, 14 * Game.SCALE);
     }
 
     public void update() {
-        //bush.updatePos();
         updatePos();
         updateAnimationTick();
     }
 
     public void render(Graphics g) {
-        //bush.render(g);
         g.drawImage(animations[aniIndex], (int) (hitbox.x - xDriveOffset), (int) (hitbox.y - yDriveOffset), (int)(width*Game.SCALE), (int)(height*Game.SCALE), null);
         drawHitbox(g);
     }
@@ -71,6 +66,7 @@ public class Player extends Entity {
 
         if (jump) {
             drop();
+            GameManager.getInstance().playerDropped();
         }
 
         if (!inAir) {
@@ -137,6 +133,12 @@ public class Player extends Entity {
         for (int i = 0; i < animations.length; i++) {
                 animations[i] = img.getSubimage(i*imageWidth, 0, imageWidth, imageHeight);
         }
+    }
+
+    protected void resetPosition(SpawningPoint spawningPoint) {
+        this.x = spawningPoint.getX();
+        this.y = spawningPoint.getY();
+        System.out.println(x + ";" + y);
     }
 
     public void loadLvlData(int[][] lvlData) {
