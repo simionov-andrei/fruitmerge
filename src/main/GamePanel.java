@@ -29,19 +29,6 @@ public class GamePanel extends JPanel{
         setPreferredSize(size);
         System.out.println("Size:" + GAME_WIDTH + " | " + GAME_HEIGHT);
     }
-
-    public void changeXDelta(int value) {
-        //this.xDelta += value;
-        /* 
-        if (100 <= this.xDelta && this.xDelta <= 300) {
-            repaint();
-        } else if (100 >= this.xDelta){
-            this.xDelta = 100;
-        } else if (this.xDelta >= 300){
-            this.xDelta = 300;
-        }
-        */
-    }
        
     public void updateGame() {
     }
@@ -51,20 +38,7 @@ public class GamePanel extends JPanel{
         game.render(g);       
         //repaint(); - not needed anymore because of run from "Game"
     }
-    /* 
-    public void updateRect() {
-        xDelta += xDir;
-        if (xDelta > 400 || xDelta < 0) {
-            xDir *= -1;
-        }
-
-        yDelta += yDir;
-        if (yDelta > 400 || yDelta < 0) {
-            yDir *= -1;
-        }
-    }
-    */
-
+ 
     public Game getGame() {
         return game;
     }    

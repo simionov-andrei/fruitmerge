@@ -5,7 +5,8 @@ import main.Game;
 public class Constants {
 
     public static class FruitConstants {
-        public static final int APPLE = 0;
+        public static final int ORANGE = 49;
+        public static final int APPLE = 50;
         public static final int IDLE = 0;
 
         public static final int APPLE_WIDTH_DEFAULT = 32;

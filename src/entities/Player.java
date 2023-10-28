@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 import main.Game;
 import static utilz.Constants.PlayerConstants.*;
 import static utilz.HelpMethods.*;
@@ -19,26 +20,32 @@ public class Player extends Entity {
     private int[][] lvlData;
     private float xDriveOffset = 16.5f * Game.SCALE;
     private float yDriveOffset = 16.5f * Game.SCALE;
+    private BufferedImage[] Images = {LoadSave.GetSpriteAtlas(LoadSave.ORANGE_SPRITE), LoadSave.GetSpriteAtlas(LoadSave.APPLE_SPRITE), 
+                                        LoadSave.GetSpriteAtlas(LoadSave.KIWI_SPRITE)};
+    private Random random = new Random();
+    int randomIndex = random.nextInt(Images.length);
+
+    //private long timer;
 
     //gravity
     private float airSpeed = 0f;
     private float gravity = 0.01f * Game.SCALE;
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
-    private boolean inAir = false;
-    protected boolean freeMove = true;
-    SpawningPoint spawningPoint;
+    public boolean inAir = false;
+    public boolean freeMove = true;
+    public boolean onTop = true;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
-        loadAnimations();
         initHitbox(x, y, 14 * Game.SCALE, 14 * Game.SCALE);
+        loadAnimations();
     }
-
+    
     public void update() {
         updatePos();
         updateAnimationTick();
     }
-
+    
     public void render(Graphics g) {
         g.drawImage(animations[aniIndex], (int) (hitbox.x - xDriveOffset), (int) (hitbox.y - yDriveOffset), (int)(width*Game.SCALE), (int)(height*Game.SCALE), null);
         drawHitbox(g);
@@ -54,39 +61,56 @@ public class Player extends Entity {
             }
         }
     }
+
         
     public void updatePos() {
         //make 2 classes for bush and for orange  --- DONE :D
         //make so bush remains on its initial position and can move with a/d --- DONE :D
         //make so orange drops, you cant use a/d anymore --- DONE :D
         //make so orange moves with the bush when on top --- DONE :D
-        //make so orange respawns
+        //make so orange respawns --- DONE :D
+        //make so it animates, moves according to bush and can drop it --- DONE :D
+        //make so it stays on dropped location with a hitbox --- DONE :D
+        //make so random objects get respawned --- DONE :D
+        //make so objects collide
         //make merging mechanic
 
 
         if (jump) {
             drop();
-            GameManager.getInstance().playerDropped();
         }
 
-        if (!inAir) {
-            return;
-        }
+        // if (!inAir) {
+        //     return;
+        // }
         
         float xSpeed = 0;
+
+        if (left && freeMove && onTop) {
+            xSpeed = -playerSpeed;
+            updateXPos(xSpeed);
+        }
+
+        if (right && freeMove && onTop) {
+            xSpeed = playerSpeed;
+            updateXPos(xSpeed);
+        }
         
-        if (!inAir) {
+        if (!onTop) {
             if (!IsEntityOnFloor(hitbox, lvlData)) {
                 inAir = true;
                 freeMove = false;
             }
         }
+
+        if(IsEntityOnFloor(hitbox, lvlData)){
+            resetInAir();
+        }
         
-        if (inAir) {
+        if (!onTop) {
             if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
                 hitbox.y += airSpeed;
                 airSpeed += gravity;
-                updateXPos(xSpeed);
             } else {
                 hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
                 if (airSpeed > 0) {
@@ -94,11 +118,8 @@ public class Player extends Entity {
                 } else {
                     airSpeed = fallSpeedAfterCollision;
                 }
-                updateXPos(xSpeed);
             }
-        } else {
-            updateXPos(xSpeed);
-        } 
+        }
     }
     
     protected void updateXPos(float xSpeed) {
@@ -115,16 +136,27 @@ public class Player extends Entity {
         }
         inAir = true;
         freeMove = false;
+        onTop = false;
+        //timer = 0;
     }
 
     protected void resetInAir() {
         inAir = false;
         freeMove = false;
+        onTop = true;
         airSpeed = 0;
+    }
+
+    public boolean getInAir() {
+        return inAir;
+    }
+
+    public boolean getFreeMove() {
+        return freeMove;
     }
     
     private void loadAnimations() {
-        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.ORANGE_SPRITE);
+        BufferedImage img = Images[randomIndex];
         int imageWidth = img.getWidth() / 17;
         int imageHeight = img.getHeight() / 1;
         
@@ -133,12 +165,6 @@ public class Player extends Entity {
         for (int i = 0; i < animations.length; i++) {
                 animations[i] = img.getSubimage(i*imageWidth, 0, imageWidth, imageHeight);
         }
-    }
-
-    protected void resetPosition(SpawningPoint spawningPoint) {
-        this.x = spawningPoint.getX();
-        this.y = spawningPoint.getY();
-        System.out.println(x + ";" + y);
     }
 
     public void loadLvlData(int[][] lvlData) {
@@ -155,6 +181,51 @@ public class Player extends Entity {
 
     public void setJump(boolean jump) {
         this.jump = jump;
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+
+
+    public boolean isUp() {
+        return up;
+    }
+
+
+
+    public boolean isRight() {
+        return right;
+    }
+
+
+
+    public boolean isDown() {
+        return down;
+    }
+
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+
+
+    public void setDown(boolean down) {
+        this.down = down;
     }
 
 }
