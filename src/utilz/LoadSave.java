@@ -1,14 +1,15 @@
 package utilz;
 
-import static utilz.Constants.FruitConstants.APPLE;
+import main.Game;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
-//import entities.Apple;
-import main.Game;
+/* 
+import java.util.ArrayList;
+import static utilz.Constants.FruitConstants.APPLE;
+*/
 
 public class LoadSave {
 

@@ -1,10 +1,6 @@
 package utilz;
 
-import java.awt.Color;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import utilz.Constants.*;
-import utilz.LoadSave.*;
 import main.Game;
 
 public class HelpMethods {
@@ -25,25 +21,21 @@ public class HelpMethods {
     
      
     public static boolean IsSolid(float x, float y, int[][] lvlData) {
-        
-        if(x < 432 || x > 863) {
+
+        if(x < 432 || x > 847) {
             return true;
         }
         
-        if(y < 0 || y >= Game.GAME_HEIGHT) {
+        if(y < 0 || y > Game.GAME_HEIGHT) {
             return true;
         }
-        
+
         float xIndex = x / Game.TILES_SIZE;
         float yIndex = y / Game.TILES_SIZE;
 
         int value = lvlData[(int) yIndex][(int) xIndex];
 
-        //BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
-        //Color color = new Color(img.getRGB((int) xIndex, (int) yIndex));
-        //int greenValue = color.getGreen();
-
-        if(value >= 48 || value < 0 || value != 11 /*|| greenValue == APPLE*/) {
+        if((value >= 48) || value < 0 || value != 11) {
             return true;
         }
         
@@ -77,6 +69,36 @@ public class HelpMethods {
             return currentTile * Game.TILES_SIZE;
         }
     }
+
+    public static float GetEntityYPosAboveOtherPlayer(Rectangle2D.Float hitboxPlayer, Rectangle2D.Float hitboxOtherPlayer, float airSpeed) {
+        float newYPos = hitboxOtherPlayer.y - hitboxPlayer.height - airSpeed;
+        
+        // Ensure that the player doesn't go above the other player
+        if (newYPos < 0) {
+            newYPos = 0;
+        }
+        
+        return newYPos;
+    }
+
+    // public static float GetEntityYPosAboveOtherPlayer(Rectangle2D.Float playerHitbox, Rectangle2D.Float anotherPlayerHitbox, float airSpeed) {
+    //     // Calculate the Y position such that the two players don't intersect
+    //     float yPos = anotherPlayerHitbox.y - playerHitbox.height - 20;
+        
+    //     // Ensure the player doesn't go below the game's lower boundary
+    //     if (yPos < 0) {
+    //         yPos = 0;
+    //     }
+    
+    //     // Ensure the player doesn't go above the game's upper boundary
+    //     float maxY = Game.GAME_HEIGHT - playerHitbox.height; // Adjust 'gameHeight' as needed
+    //     if (yPos > maxY) {
+    //         yPos = maxY;
+    //     }
+    
+    //     return yPos;
+    // }
+    
 
     public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
         //check pixel below bottom left and bottom right
