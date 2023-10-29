@@ -18,27 +18,44 @@ public class Player extends Entity {
     private boolean left, up, right, down, jump;
     private float playerSpeed = 2.0f;
     private int[][] lvlData;
-    private float xDriveOffset = 16.5f * Game.SCALE;
-    private float yDriveOffset = 16.5f * Game.SCALE;
-    private BufferedImage[] Images = {LoadSave.GetSpriteAtlas(LoadSave.ORANGE_SPRITE), LoadSave.GetSpriteAtlas(LoadSave.APPLE_SPRITE), 
+    private float xDriveOffset;
+    private float yDriveOffset;
+    private int hitboxScale, newWidth;
+    public BufferedImage[] Images = {LoadSave.GetSpriteAtlas(LoadSave.ORANGE_SPRITE), LoadSave.GetSpriteAtlas(LoadSave.APPLE_SPRITE), 
                                         LoadSave.GetSpriteAtlas(LoadSave.KIWI_SPRITE)};
     private Random random = new Random();
-    int randomIndex = random.nextInt(Images.length);
+    private int randomIndex = random.nextInt(Images.length);
 
     //private long timer;
 
     //gravity
-    private float airSpeed = 0f;
-    private float gravity = 0.01f * Game.SCALE;
+    public float airSpeed = 0f;
+    private float gravity = 0.1f * Game.SCALE;
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
     public boolean inAir = false;
     public boolean freeMove = true;
     public boolean onTop = true;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(float x, float y, int width, int height, int index) {
         super(x, y, width, height);
-        initHitbox(x, y, 14 * Game.SCALE, 14 * Game.SCALE);
-        loadAnimations();
+        newWidth = width;
+        hitboxScale = 14;
+        xDriveOffset = 16.5f * Game.SCALE;
+        yDriveOffset = 16.5f * Game.SCALE;
+
+        if(randomIndex == 1) {
+            newWidth = 63;
+            hitboxScale = 16;
+            xDriveOffset = 33;
+            yDriveOffset = 33;
+        } else if(randomIndex == 2) {
+            newWidth = 78;
+            hitboxScale = 22;
+            xDriveOffset = 40;
+            yDriveOffset = 40;
+        } 
+        initHitbox(x, y, hitboxScale * Game.SCALE, hitboxScale * Game.SCALE);
+        loadAnimations(randomIndex);
     }
     
     public void update() {
@@ -47,7 +64,7 @@ public class Player extends Entity {
     }
     
     public void render(Graphics g) {
-        g.drawImage(animations[aniIndex], (int) (hitbox.x - xDriveOffset), (int) (hitbox.y - yDriveOffset), (int)(width*Game.SCALE), (int)(height*Game.SCALE), null);
+        g.drawImage(animations[aniIndex], (int) (hitbox.x - xDriveOffset), (int) (hitbox.y - yDriveOffset), (int)(newWidth*Game.SCALE), (int)(newWidth*Game.SCALE), null);
         drawHitbox(g);
     }
 
@@ -62,6 +79,9 @@ public class Player extends Entity {
         }
     }
 
+    public int getSprite() {
+        return randomIndex;
+    }
         
     public void updatePos() {
         //make 2 classes for bush and for orange  --- DONE :D
@@ -72,17 +92,13 @@ public class Player extends Entity {
         //make so it animates, moves according to bush and can drop it --- DONE :D
         //make so it stays on dropped location with a hitbox --- DONE :D
         //make so random objects get respawned --- DONE :D
-        //make so objects collide
-        //make merging mechanic
+        //make so objects collide --- DONE :D
+        //make merging mechanic --- DONE :D
 
 
         if (jump) {
             drop();
         }
-
-        // if (!inAir) {
-        //     return;
-        // }
         
         float xSpeed = 0;
 
@@ -126,7 +142,7 @@ public class Player extends Entity {
         if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
             hitbox.x += xSpeed;
         } else {
-            hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+            //hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
         }
     }
 
@@ -155,8 +171,8 @@ public class Player extends Entity {
         return freeMove;
     }
     
-    private void loadAnimations() {
-        BufferedImage img = Images[randomIndex];
+    private void loadAnimations(int index) {
+        BufferedImage img = Images[index];
         int imageWidth = img.getWidth() / 17;
         int imageHeight = img.getHeight() / 1;
         

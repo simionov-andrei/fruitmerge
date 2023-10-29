@@ -51,6 +51,8 @@ public class Bush extends Entity{
     protected void updateXPos(float xSpeed) {
         if (CanMoveHere(x + xSpeed, y, player.hitbox.width, height, lvlData)) {
             x += xSpeed;
+        } else {
+            //x = GetEntityXPosNextToWall(player.hitbox, xSpeed);
         }
     }
 
