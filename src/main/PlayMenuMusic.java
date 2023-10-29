@@ -16,7 +16,7 @@ public class PlayMenuMusic{
     public PlayMenuMusic() {
         
         // Load and play the background music
-        playMenuMusic("res/backgroundMusic.wav");
+        playMenuMusic("res/menuMusic.wav");
     }
 
     public static void playMenuMusic(String musicFile) {

@@ -16,7 +16,7 @@ public class PlayBackgroundMusic {
     public PlayBackgroundMusic() {
         
         // Load and play the background music
-        playBackgroundMusic("C:/University/Q1/Programming/fruitmerge/res/backgroundMusic.wav");
+        playBackgroundMusic("res/backgroundMusic.wav");
     }
 
     public static void playBackgroundMusic(String musicFile) {

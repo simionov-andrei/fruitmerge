@@ -61,7 +61,6 @@ public class Game implements Runnable {
         startGameLoop();
 
         menuMusicPlayer = new PlayMenuMusic();
-
     }
 
     private void initClasses() {
