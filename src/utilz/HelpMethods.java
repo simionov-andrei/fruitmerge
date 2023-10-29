@@ -29,6 +29,11 @@ public class HelpMethods {
         if(y < 0 || y > Game.GAME_HEIGHT) {
             return true;
         }
+        
+        // if(y > 10) {
+        //     System.out.println("You exceeded the limit :(");
+        //     System.exit(0);
+        // }
 
         float xIndex = x / Game.TILES_SIZE;
         float yIndex = y / Game.TILES_SIZE;

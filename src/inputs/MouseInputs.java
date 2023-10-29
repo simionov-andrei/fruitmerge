@@ -43,7 +43,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                 
                 if (Game.State == Game.STATE.GAME) {
                     PlayMenuMusic.stopMenuMusic();
-                    PlayBackgroundMusic.playBackgroundMusic("C:/University/Q1/Programming/fruitmerge/res/backgroundMusic.wav");
+                    PlayBackgroundMusic.playBackgroundMusic("res/backgroundMusic.wav");
                 } 
             }
         }
@@ -60,7 +60,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
                 if (Game.State != Game.STATE.GAME) {
                     PlayBackgroundMusic.stopBackgroundMusic();
-                    PlayMenuMusic.playMenuMusic("C:/University/Q1/Programming/fruitmerge/res/menuMusic.wav");
+                    PlayMenuMusic.playMenuMusic("res/menuMusic.wav");
                 } 
             }
         }
@@ -93,7 +93,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
                 if (Game.State == Game.STATE.GAME) {
                     PlayMenuMusic.stopMenuMusic();
-                    PlayBackgroundMusic.playBackgroundMusic("C:/University/Q1/Programming/fruitmerge/res/backgroundMusic.wav");
+                    PlayBackgroundMusic.playBackgroundMusic("res/backgroundMusic.wav");
                 } 
             }
         }

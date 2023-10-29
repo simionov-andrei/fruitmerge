@@ -60,6 +60,8 @@ public class Game implements Runnable {
         gamePanel.requestFocus();
         startGameLoop();
 
+        menuMusicPlayer = new PlayMenuMusic();
+
     }
 
     private void initClasses() {
