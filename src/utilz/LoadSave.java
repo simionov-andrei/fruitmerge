@@ -22,6 +22,7 @@ public class LoadSave {
     public static final String APPLE_SPRITE = "Apple.png";
     public static final String KIWI_SPRITE = "Kiwi.png";
     public static final String ORANGE_SPRITE = "Orange.png";
+    public static final String OPTIONS_BUTTON = "optionsGear.png";
     
     public static BufferedImage GetSpriteAtlas(String filename) {
         InputStream is = LoadSave.class.getResourceAsStream("/" + filename);

@@ -4,18 +4,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import main.GamePanel;
-import javax.swing.JFrame;
 import main.Game;
 import main.PlayMenuMusic;
 import main.Game.STATE;
 import main.PlayBackgroundMusic;
-import levels.Playing;
 
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
     private GamePanel gamePanel;
-    private PlayBackgroundMusic backgroundMusicPlayer;
-    private PlayMenuMusic menuMusicPlayer;
 
     public MouseInputs(GamePanel gamePanel) {
         

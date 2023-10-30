@@ -73,14 +73,14 @@ public class Game implements Runnable {
     }
 
     private void spawnNewPlayer(int spawningPointX, int spawningPointY, int index) {
-        if (HelpMethods.IsEntityOnFloor(player.getHitbox(), LoadSave.GetLevelData()) || checkCollisions()) {
+        if (HelpMethods.IsEntityOnFloor(player.getHitbox(), LoadSave.GetLevelData()) || checkCollisions(player)) {
             activePlayers.add(player);
             player = new Player(spawningPointX, spawningPointY, (int) (32 * SCALE), (int) (32 * SCALE), index);
             player.loadLvlData(levelManager.getCurrentLevel().getLevelData()); 
         }
     }
     
-    public boolean checkCollisions() {
+    public boolean checkCollisions(Player player) {
         for (Player anotherPlayer : activePlayers) {
             if (player != anotherPlayer && player.getHitbox().intersects(anotherPlayer.getHitbox())) {
                 collision(player, anotherPlayer);
