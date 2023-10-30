@@ -22,6 +22,7 @@ public class LoadSave {
     public static final String APPLE_SPRITE = "Apple.png";
     public static final String KIWI_SPRITE = "Kiwi.png";
     public static final String ORANGE_SPRITE = "Orange.png";
+    public static final String OPTIONS_BUTTON = "optionsGear.png";
     
     public static BufferedImage GetSpriteAtlas(String filename) {
         InputStream is = LoadSave.class.getResourceAsStream("/" + filename);
@@ -39,22 +40,6 @@ public class LoadSave {
         }
         return img;
     }
-    /* 
-    public static ArrayList<Apple> GetApples() {
-        BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
-        ArrayList<Apple> list = new ArrayList<>();
-
-        for(int j = 0; j < img.getHeight(); j++) {
-            for(int i = 0; i < img.getWidth(); i++) {
-                Color color = new Color(img.getRGB(i, j));
-                int value = color.getGreen();
-                if (value == APPLE)
-                    list.add(new Apple(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
-            }
-        }
-        return list;
-    }
-    */
 
     public static int[][] GetPlayerData() {
         BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);

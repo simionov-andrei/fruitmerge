@@ -41,6 +41,11 @@ public class Constants {
         public static final int SMALL_CLOUD_HEIGHT_DEFAULT = 24;
         public static final int SMALL_CLOUD_WIDTH = (int)(SMALL_CLOUD_WIDTH_DEFAULT * Game.SCALE);
         public static final int SMALL_CLOUD_HEIGHT = (int)(SMALL_CLOUD_HEIGHT_DEFAULT * Game.SCALE);
+
+        public static final int OPTIONS_BUTTON_WIDTH_DEFAULT = 626;
+        public static final int OPTIONS_BUTTON_HEIGHT_DEFAULT = 626;
+        public static final int OPTIONS_BUTTON_WIDTH = (int)(OPTIONS_BUTTON_WIDTH_DEFAULT * Game.SCALE);
+        public static final int OPTIONS_BUTTON_HEIGHT = (int)(OPTIONS_BUTTON_HEIGHT_DEFAULT * Game.SCALE);
     }
     
     public static class PlayerConstants {

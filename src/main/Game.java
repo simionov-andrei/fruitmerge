@@ -11,6 +11,10 @@ import levels.LevelManager;
 import levels.Playing;
 import utilz.LoadSave;
 import utilz.HelpMethods;
+import main.StartingMenu;
+import main.PlayBackgroundMusic;
+import main.PlayMenuMusic;
+
 
 public class Game implements Runnable {
 
@@ -27,7 +31,18 @@ public class Game implements Runnable {
     private List<Player> activePlayers = new ArrayList<>();
     private Random random = new Random();
     private int randomIndex = random.nextInt(3);
+    private PlayBackgroundMusic backgroundMusicPlayer;
+    private PlayMenuMusic menuMusicPlayer;
 
+    public enum STATE {
+        MENU,
+        GAME,
+        OPTIONS
+    };
+    public static STATE State = STATE.MENU;
+    public StartingMenu menu = new StartingMenu();
+    public OptionsMenu options = new OptionsMenu();
+    
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 1.5f;
     public static final int TILES_IN_WIDTH = 26;
@@ -45,6 +60,7 @@ public class Game implements Runnable {
         gamePanel.requestFocus();
         startGameLoop();
 
+        menuMusicPlayer = new PlayMenuMusic();
     }
 
     private void initClasses() {
@@ -57,14 +73,14 @@ public class Game implements Runnable {
     }
 
     private void spawnNewPlayer(int spawningPointX, int spawningPointY, int index) {
-        if (HelpMethods.IsEntityOnFloor(player.getHitbox(), LoadSave.GetLevelData()) || checkCollisions()) {
+        if (HelpMethods.IsEntityOnFloor(player.getHitbox(), LoadSave.GetLevelData()) || checkCollisions(player)) {
             activePlayers.add(player);
-            player = new Player(spawningPointX, spawningPointY, (int) (32 * SCALE), (int) (32 * SCALE), randomIndex);
+            player = new Player(spawningPointX, spawningPointY, (int) (32 * SCALE), (int) (32 * SCALE), index);
             player.loadLvlData(levelManager.getCurrentLevel().getLevelData()); 
         }
     }
     
-    public boolean checkCollisions() {
+    public boolean checkCollisions(Player player) {
         for (Player anotherPlayer : activePlayers) {
             if (player != anotherPlayer && player.getHitbox().intersects(anotherPlayer.getHitbox())) {
                 collision(player, anotherPlayer);
@@ -95,6 +111,7 @@ public class Game implements Runnable {
             spawnNewPlayer((int)mergedSpawnX, (int)mergedSpawnY, playerSpriteIndex);
         }
     }
+
     
     private void startGameLoop() {
         gameThread = new Thread(this);
@@ -102,23 +119,30 @@ public class Game implements Runnable {
     }
 
     public void update() {
-        bush.update();
-        levelManager.update();
-        player.update();
+        if(State == STATE.GAME) {
+            bush.update();
+            levelManager.update();
+            player.update();
+        }
 
     }
 
     public void render(Graphics g) {
-        playing.draw(g);
-        levelManager.draw(g);
-        bush.render(g);
-        player.render(g);
-
-        for(Player player : activePlayers) {
+        if(State != STATE.MENU) {
+            playing.draw(g);
+            levelManager.draw(g);
+            bush.render(g);
             player.render(g);
-            //newPlayer.render(g);
+            for(Player player : activePlayers) {
+                player.render(g);
+            }
+        } else if (State == STATE.MENU) {
+            menu.render(g);
+        } 
+        
+        if (State == STATE.OPTIONS) {
+            options.render(g);
         }
-
     }
 
     @Override

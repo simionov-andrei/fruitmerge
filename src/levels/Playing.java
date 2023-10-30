@@ -7,10 +7,12 @@ import main.Game;
 import utilz.LoadSave;
 import static utilz.Constants.Environment.*;
 
+
 public class Playing {
 
     private BufferedImage backgroundImg,  bigCloud, smallCloud;
     private int[] smallCloudsPos;
+    private BufferedImage optionsButtonImage;
     private Random rnd = new Random();
 
     public Playing(Game game) {
@@ -18,6 +20,7 @@ public class Playing {
         backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BG_IMG);
         bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
         smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
+        optionsButtonImage = LoadSave.GetSpriteAtlas(LoadSave.OPTIONS_BUTTON);
         smallCloudsPos = new int[8];
         for(int i = 0; i < smallCloudsPos.length; i++) {
             smallCloudsPos[i] = rnd.nextInt((int)(150 * Game.SCALE));
@@ -28,6 +31,7 @@ public class Playing {
     public void draw(Graphics g) {
         g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
         drawClouds(g);
+        drawOptionsButton(g);
     }
 
     private void drawClouds(Graphics g) {
@@ -37,5 +41,9 @@ public class Playing {
         for(int i = 0; i < smallCloudsPos.length; i++) {
             g.drawImage(smallCloud, i * SMALL_CLOUD_WIDTH * 3, smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
         }
+    }
+
+    public void drawOptionsButton(Graphics g) {
+        g.drawImage(optionsButtonImage, 1168, 18, 60, 60, null);
     }
 }
